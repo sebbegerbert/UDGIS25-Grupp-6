@@ -1,5 +1,6 @@
 let map, view, graphicsLayer, busLayer, markers, positions, current, busInterval
-const json_och_iconer = ["badplatser", "idrott_motion", "lekplatser"]
+const json_och_iconer = ["badplatser", "idrott_motion", "lekplatser", "livraddningsutrustning", "offentliga_toaletter", "papperskorgar", "parkmobler", "pulkabackar", "Rastplatser", "spontanidrott", "utegym"]
+
 require([
   "esri/Map",
   "esri/views/MapView",
@@ -22,14 +23,7 @@ require([
   });
 
   var stopsLayer = new GraphicsLayer();
-  busLayer = new GraphicsLayer();
-  positions = [];
-  markers = [];
   getStopsData(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate);
-  /*getBusData();
-  makeBusMarkers(stopsLayer, Graphic, Point, PictureMarkerSymbol);
-  initButtons(Point);
-  map.add(busLayer);*/
 });
 
 async function fetchData(file) {
@@ -47,11 +41,16 @@ function getStopsData(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemp
   }
 
   function showStops(data, stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate) {
-
+    map.add(stopsLayer);
     data.features.forEach(features => {
 
       const coord = features.geometry.coordinates;
-      const name = features.properties.namn;
+      if (features.properties.NAMN == null) {
+        var name = features.properties.namn;
+      } else {
+        var name = features.properties.NAMN;
+      }
+      var beskrivning = features.properties.BESKR_KORT;
 
       var point = new Point({
         longitude: coord[0],
@@ -64,23 +63,19 @@ function getStopsData(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemp
           type: "simple-marker",
           color: "pink",
           size: 8,
-        },
-
+        }
       });
-      stopsLayer.add(graphic);
-      map.add(stopsLayer);
-      /* var popupTemplate = new PopupTemplate({
-         title: "Busshållsplats",
-         content: name
-       });
-       graphic.popupTemplate = popupTemplate;
-       stopsLayer.add(graphic);
-   
-     });*/
 
+      var popupTemplate = new PopupTemplate({
+        title: name,
+        content: beskrivning
+      });
+      graphic.popupTemplate = popupTemplate;
+      stopsLayer.add(graphic);
 
     });
-  }
+
+  };
 }
 
 
