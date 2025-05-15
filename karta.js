@@ -26,6 +26,12 @@ require([
   getStopsData(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate);
 });
 
+const barnvanliga = ["lekplatser", "pulkabackar"];
+const motion = ["utegym", "motionsspar", "idrott_motion", "spontanidrott"];
+const natur = ["badplatser", "rastplatser", "parkmobler"];
+const service = ["offentliga_toaletter", "papperskorgar"];
+const trygghet = ["livraddningsutrustning"];
+
 async function fetchData(file) {
   const response = await fetch(file);
   return response.json();
