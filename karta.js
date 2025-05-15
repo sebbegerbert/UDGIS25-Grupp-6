@@ -45,11 +45,7 @@ function getStopsData(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemp
     data.features.forEach(features => {
 
       const coord = features.geometry.coordinates;
-      if (features.properties.NAMN == null) {
-        var name = features.properties.namn;
-      } else {
-        var name = features.properties.NAMN;
-      }
+      var name = features.properties.NAMN;
       var beskrivning = features.properties.BESKR_KORT;
 
       var point = new Point({
@@ -79,24 +75,24 @@ function getStopsData(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemp
 }
 
 
-function showBarnvanliga_aktiviteter(){
+function showBarnvanliga_aktiviteter() {
 
 }
 
-function showMotion_traning(){
-  
+function showMotion_traning() {
+
 }
 
-function showNatur_rekreation(){
-  
+function showNatur_rekreation() {
+
 }
 
-function showServicefunktioner(){
-  
+function showServicefunktioner() {
+
 }
 
-function showTrygghet(){
-  
+function showTrygghet() {
+
 }
 
 function initButtons(point) {
