@@ -1,5 +1,4 @@
 let map, view, graphicsLayer, busLayer, markers, positions, current, busInterval
-//const json_och_iconer = ["badplatser", "idrott_motion", "lekplatser", "livraddningsutrustning", "offentliga_toaletter", "papperskorgar", "parkmobler", "pulkabackar", "Rastplatser", "spontanidrott", "utegym"]
 
 require([
   "esri/Map",
@@ -26,9 +25,8 @@ require([
 
   var stopsLayer = new GraphicsLayer();
   map.add(stopsLayer);
-  //getPoints(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate);
 
-
+  //Kategorier med filnamn utan filändelse 
   const categories = {
     barnvanliga : ["lekplatser", "pulkabackar"],
     motion : ["utegym", "motionsspar", "idrott_motion", "spontanidrott"],
@@ -42,6 +40,7 @@ require([
     return response.json();
   }
 
+  //Får filnamn (utan filändelse) i form av en lista och skickar det med rätt filändelse till showPoints
   function getPoints(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList) {
     fileList.forEach(fileName =>  {
       var json_file = ("JSON/" + fileName + ".json")
@@ -61,6 +60,8 @@ require([
       let geometry;
       let symbol;
 
+      //Kollar vilken geometry type det är och ger punkter och linjer symboler. 
+      //Borde kanske vara en egen funktion för att göra det lättare sen med polygon. Inget viktigt
       if (geomType === "Point") {
         geometry = {
           type: "point",
@@ -86,6 +87,7 @@ require([
         console.warn("Unsupported geometry type:", geomType)
       }
 
+      //Ritar geometrier och lägger till popup ruta
       var graphic = new Graphic({
         geometry: geometry,
         symbol: symbol,
@@ -100,6 +102,7 @@ require([
     });
   };
 
+  //Med hjälp av knapp namn väljs kategori och skickas till getPoints
   function initButtons(point) {
     const buttons = document.querySelectorAll(".paneButton");
 
