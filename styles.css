@@ -5,3 +5,20 @@
       height: 100%;
       width: 100%;
     }
+
+    .buttons {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 99;
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px #888;
+    }
+
+    .paneButton {
+      margin: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }

@@ -82,3 +82,36 @@ function getStopsData(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemp
     });
   }
 }
+
+
+function showBarnvanliga_aktiviteter(){
+
+}
+
+function showMotion_traning(){
+  
+}
+
+function showNatur_rekreation(){
+  
+}
+
+function showServicefunktioner(){
+  
+}
+
+function showTrygghet(){
+  
+}
+
+function initButtons(point) {
+  const buttons = document.querySelectorAll(".paneButton");
+
+  buttons.forEach(button => {
+    button.addEventListener("click", () => {
+      const fileName = button.name + ".json";
+      const filePath = "data/" + fileName;
+      showPoints(filePath);
+    });
+  });
+}
