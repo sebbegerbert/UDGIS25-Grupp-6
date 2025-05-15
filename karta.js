@@ -1,5 +1,5 @@
 let map, view, graphicsLayer, busLayer, markers, positions, current, busInterval
-const json_och_iconer = ["badplatser", "idrott_motion", "lekplatser", "livraddningsutrustning", "offentliga_toaletter", "papperskorgar", "parkmobler", "pulkabackar", "Rastplatser", "spontanidrott", "utegym"]
+//const json_och_iconer = ["badplatser", "idrott_motion", "lekplatser", "livraddningsutrustning", "offentliga_toaletter", "papperskorgar", "parkmobler", "pulkabackar", "Rastplatser", "spontanidrott", "utegym"]
 
 require([
   "esri/Map",
@@ -7,9 +7,11 @@ require([
   "esri/layers/GraphicsLayer",
   "esri/Graphic",
   "esri/geometry/Point",
+  "esri/geometry/Polyline",
   "esri/symbols/PictureMarkerSymbol",
   "esri/PopupTemplate"
-], function(Map, MapView, GraphicsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate) {
+  
+], function(Map, MapView, GraphicsLayer, Graphic, Point, Polyline, PictureMarkerSymbol, PopupTemplate) {
 
   map = new Map({
     basemap: "streets"
@@ -23,92 +25,93 @@ require([
   });
 
   var stopsLayer = new GraphicsLayer();
-  getStopsData(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate);
-});
+  map.add(stopsLayer);
+  //getPoints(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate);
 
-const barnvanliga = ["lekplatser", "pulkabackar"];
-const motion = ["utegym", "motionsspar", "idrott_motion", "spontanidrott"];
-const natur = ["badplatser", "rastplatser", "parkmobler"];
-const service = ["offentliga_toaletter", "papperskorgar"];
-const trygghet = ["livraddningsutrustning"];
 
-async function fetchData(file) {
-  const response = await fetch(file);
-  return response.json();
-}
+  const categories = {
+    barnvanliga : ["lekplatser", "pulkabackar"],
+    motion : ["utegym", "motionsspar", "idrott_motion", "spontanidrott"],
+    natur : ["badplatser", "rastplatser", "parkmobler"],
+    service : ["offentliga_toaletter", "papperskorgar"],
+    trygghet : ["livraddningsutrustning"]
+  };
 
-function getStopsData(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate) {
-  for (let i = 0; i < json_och_iconer.length; i++) {
-    var json_file = ("JSON/" + json_och_iconer[i] + ".json")
+  async function fetchData(file) {
+    const response = await fetch(file);
+    return response.json();
+  }
 
-    fetchData(json_file).then(data => {
-      showStops(data, stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate);
+  function getPoints(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList) {
+    fileList.forEach(fileName =>  {
+      var json_file = ("JSON/" + fileName + ".json")
+
+      fetchData(json_file).then(data => {
+        showPoints(data, stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate);
+      });
     });
   }
 
-  function showStops(data, stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate) {
-    map.add(stopsLayer);
-    data.features.forEach(features => {
+  function showPoints(data, stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate) {
+    data.features.forEach(feature => {
 
-      const coord = features.geometry.coordinates;
-      var name = features.properties.NAMN;
-      var beskrivning = features.properties.BESKR_KORT;
+      const geomType = feature.geometry.type;
+      const coord = feature.geometry.coordinates;
 
-      var point = new Point({
-        longitude: coord[0],
-        latitude: coord[1],
-      });
+      let geometry;
+      let symbol;
 
-      var graphic = new Graphic({
-        geometry: point,
-        symbol: {
+      if (geomType === "Point") {
+        geometry = {
+          type: "point",
+          longitude: coord[0],
+          latitude: coord[1]
+        };
+        symbol = {
           type: "simple-marker",
           color: "pink",
-          size: 8,
+          size: 8
+        };
+      } else if (geomType === "LineString") {
+        geometry = {
+          type: "polyline",
+          paths: [coord]
+        };
+        symbol = {
+          type: "simple-line",
+          color: "red",
+          width: 2
+        };
+      } else {
+        console.warn("Unsupported geometry type:", geomType)
+      }
+
+      var graphic = new Graphic({
+        geometry: geometry,
+        symbol: symbol,
+        attributes: feature.properties,
+        popupTemplate: {
+          title: "{NAMN}",
+          content: "{BESKR_KORT}"
         }
       });
 
-      var popupTemplate = new PopupTemplate({
-        title: name,
-        content: beskrivning
-      });
-      graphic.popupTemplate = popupTemplate;
       stopsLayer.add(graphic);
-
     });
-
   };
-}
 
+  function initButtons(point) {
+    const buttons = document.querySelectorAll(".paneButton");
 
-function showBarnvanliga_aktiviteter() {
-
-}
-
-function showMotion_traning() {
-
-}
-
-function showNatur_rekreation() {
-
-}
-
-function showServicefunktioner() {
-
-}
-
-function showTrygghet() {
-
-}
-
-function initButtons(point) {
-  const buttons = document.querySelectorAll(".paneButton");
-
-  buttons.forEach(button => {
-    button.addEventListener("click", () => {
-      const fileName = button.name + ".json";
-      const filePath = "data/" + fileName;
-      showPoints(filePath);
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        const categoryName = button.name;
+        const fileList = categories[categoryName];
+      
+        getPoints(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList);
+      });
     });
-  });
-}
+  }
+
+  initButtons();
+});
