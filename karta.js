@@ -42,6 +42,8 @@ require([
 
   //Får filnamn (utan filändelse) i form av en lista och skickar det med rätt filändelse till showPoints
   function getPoints(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList) {
+    stopsLayer.removeAll();
+
     fileList.forEach(fileName =>  {
       var json_file = ("JSON/" + fileName + ".json")
 
@@ -83,7 +85,17 @@ require([
           color: "red",
           width: 2
         };
-      } else {
+      } else if (geomType === "MultiLineString") {
+        geometry = {
+          type: "polyline",
+          paths: [coord]
+        };
+        symbol = {
+          type: "simple-line",
+          color: "red",
+          width: 2
+        };
+      }else {
         console.warn("Unsupported geometry type:", geomType)
       }
 
@@ -110,7 +122,7 @@ require([
       button.addEventListener("click", () => {
         const categoryName = button.name;
         const fileList = categories[categoryName];
-      
+        
         getPoints(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList);
       });
     });
