@@ -8,9 +8,10 @@ require([
   "esri/geometry/Point",
   "esri/geometry/Polyline",
   "esri/symbols/PictureMarkerSymbol",
-  "esri/PopupTemplate"
-  
-], function(Map, MapView, GraphicsLayer, Graphic, Point, Polyline, PictureMarkerSymbol, PopupTemplate) {
+  "esri/PopupTemplate",
+  "esri/geometry/support/webMercatorUtils",
+
+], function(Map, MapView, GraphicsLayer, Graphic, Point, Polyline, PictureMarkerSymbol, PopupTemplate, webMercatorUtils) {
 
   map = new Map({
     basemap: "streets"
@@ -28,11 +29,11 @@ require([
 
   //Kategorier med filnamn utan filändelse 
   const categories = {
-    barnvanliga : ["lekplatser", "pulkabackar"],
-    motion : ["utegym", "motionsspar", "idrott_motion", "spontanidrott"],
-    natur : ["badplatser", "rastplatser", "parkmobler"],
-    service : ["offentliga_toaletter", "papperskorgar"],
-    trygghet : ["livraddningsutrustning"]
+    barnvanliga: ["lekplatser", "pulkabackar"],
+    motion: ["utegym", "motionsspar", "idrott_motion", "spontanidrott"],
+    natur: ["badplatser", "rastplatser", "parkmobler"],
+    service: ["offentliga_toaletter", "papperskorgar"],
+    trygghet: ["livraddningsutrustning"]
   };
 
   async function fetchData(file) {
@@ -44,7 +45,7 @@ require([
   function getPoints(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList) {
     stopsLayer.removeAll();
 
-    fileList.forEach(fileName =>  {
+    fileList.forEach(fileName => {
       var json_file = ("JSON/" + fileName + ".json")
 
       fetchData(json_file).then(data => {
@@ -95,7 +96,7 @@ require([
           color: "red",
           width: 2
         };
-      }else {
+      } else {
         console.warn("Unsupported geometry type:", geomType)
       }
 
@@ -122,11 +123,36 @@ require([
       button.addEventListener("click", () => {
         const categoryName = button.name;
         const fileList = categories[categoryName];
-        
+
         getPoints(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList);
       });
+      document.getElementById("resetUserPoint").addEventListener("click", () => {
+        stopsLayer.removeAll();
+
+
+      })
     });
   }
+  //Funktion som lägger till användarens engna punker
+  //TODO: Ändra så det inte läggs ut punkter när man klickar på redan utlagda punkter. Förslagsvis genom att använda en checklåda för ett "skapa egna punkter läge".
+  view.on("click", function(event) {
+    var geoPoint = webMercatorUtils.webMercatorToGeographic(event.mapPoint);
+    var uPoint = new Point({
+      longitude: geoPoint.x,
+      latitude: geoPoint.y
+    });
+    var userPoint = new Graphic({
+      geometry: uPoint,
+      symbol: {
+        type: "simple-marker",
+        color: "pink",
+        size: 8,
 
+      }
+
+    });
+    stopsLayer.add(userPoint);
+
+  });
   initButtons();
 });
