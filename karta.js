@@ -136,23 +136,32 @@ require([
   //Funktion som lägger till användarens engna punker
   //TODO: Ändra så det inte läggs ut punkter när man klickar på redan utlagda punkter. Förslagsvis genom att använda en checklåda för ett "skapa egna punkter läge".
   view.on("click", function(event) {
-    var geoPoint = webMercatorUtils.webMercatorToGeographic(event.mapPoint);
-    var uPoint = new Point({
-      longitude: geoPoint.x,
-      latitude: geoPoint.y
-    });
-    var userPoint = new Graphic({
-      geometry: uPoint,
-      symbol: {
-        type: "simple-marker",
-        color: "pink",
-        size: 8,
+    if (document.getElementById("resetbox").checked == true) {
+      let userPOIname = prompt("Skriv in namnet på din POI.");
+      let userPOIdesc = prompt("Skriv in en beskrivning.");
 
-      }
+      var geoPoint = webMercatorUtils.webMercatorToGeographic(event.mapPoint);
+      var uPoint = new Point({
+        longitude: geoPoint.x,
+        latitude: geoPoint.y
+      });
+      var userPoint = new Graphic({
+        geometry: uPoint,
+        symbol: {
+          type: "simple-marker",
+          color: "pink",
+          size: 8,
+        },
+        popupTemplate: {
+          title: userPOIname,
+          content: userPOIdesc
+        }
 
-    });
-    stopsLayer.add(userPoint);
 
+
+      });
+      stopsLayer.add(userPoint);
+    }
   });
   initButtons();
 });
