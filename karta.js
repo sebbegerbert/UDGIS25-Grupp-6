@@ -1,4 +1,4 @@
-let map, view, graphicsLayer, busLayer, markers, positions, current, busInterval
+let map, view, graphicsLayer
 
 require([
   "esri/Map",
@@ -24,8 +24,8 @@ require([
     sliderStyle: "small"
   });
 
-  var stopsLayer = new GraphicsLayer();
-  map.add(stopsLayer);
+  var POILayer = new GraphicsLayer();
+  map.add(POILayer);
 
   //Kategorier med filnamn utan filändelse 
   const categories = {
@@ -42,19 +42,19 @@ require([
   }
 
   //Får filnamn (utan filändelse) i form av en lista och skickar det med rätt filändelse till showPoints
-  function getPoints(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList) {
-    stopsLayer.removeAll();
+  function getPoints(POILayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList) {
+    POILayer.removeAll();
 
     fileList.forEach(fileName => {
       var json_file = ("JSON/" + fileName + ".json")
 
       fetchData(json_file).then(data => {
-        showPoints(data, stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate);
+        showPoints(data, POILayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate);
       });
     });
   }
 
-  function showPoints(data, stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate) {
+  function showPoints(data, POILayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate) {
     data.features.forEach(feature => {
 
       const geomType = feature.geometry.type;
@@ -110,7 +110,7 @@ require([
           content: "{BESKR_KORT}"
         }
       });
-      stopsLayer.add(graphic);
+      POILayer.add(graphic);
     });
   };
 
@@ -123,10 +123,10 @@ require([
         const categoryName = button.name;
         const fileList = categories[categoryName];
 
-        getPoints(stopsLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList);
+        getPoints(POILayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList);
       });
       document.getElementById("resetUserPoint").addEventListener("click", () => {
-        stopsLayer.removeAll();
+        POILayer.removeAll();
       })
     });
   }
@@ -155,7 +155,7 @@ require([
           content: userPOIdesc
         }
       });
-      stopsLayer.add(userPoint);
+      POILayer.add(userPoint);
     }
   });
   initButtons();
