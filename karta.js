@@ -110,7 +110,6 @@ require([
           content: "{BESKR_KORT}"
         }
       });
-
       stopsLayer.add(graphic);
     });
   };
@@ -128,11 +127,10 @@ require([
       });
       document.getElementById("resetUserPoint").addEventListener("click", () => {
         stopsLayer.removeAll();
-
-
       })
     });
   }
+
   //Funktion som lägger till användarens engna punker
   //TODO: Ändra så det inte läggs ut punkter när man klickar på redan utlagda punkter. Förslagsvis genom att använda en checklåda för ett "skapa egna punkter läge".
   view.on("click", function(event) {
@@ -156,9 +154,6 @@ require([
           title: userPOIname,
           content: userPOIdesc
         }
-
-
-
       });
       stopsLayer.add(userPoint);
     }
