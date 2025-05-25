@@ -24,8 +24,8 @@ require([
     sliderStyle: "small"
   });
 
-  var POILayer = new GraphicsLayer();
-  map.add(POILayer);
+  var poiLayer = new GraphicsLayer();
+  map.add(poiLayer);
 
   //Kategorier med filnamn utan filändelse 
   const categories = {
@@ -42,19 +42,19 @@ require([
   }
 
   //Får filnamn (utan filändelse) i form av en lista och skickar det med rätt filändelse till showPoints
-  function getPoints(POILayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList) {
-    POILayer.removeAll();
+  function getPoints(poiLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList) {
+    poiLayer.removeAll();
 
     fileList.forEach(fileName => {
       var json_file = ("JSON/" + fileName + ".json")
 
       fetchData(json_file).then(data => {
-        showPoints(data, POILayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate);
+        showPoints(data, poiLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate);
       });
     });
   }
 
-  function showPoints(data, POILayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate) {
+  function showPoints(data, poiLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate) {
     data.features.forEach(feature => {
 
       const geomType = feature.geometry.type;
@@ -110,7 +110,7 @@ require([
           content: "{BESKR_KORT}"
         }
       });
-      POILayer.add(graphic);
+      poiLayer.add(graphic);
     });
   };
 
@@ -123,16 +123,15 @@ require([
         const categoryName = button.name;
         const fileList = categories[categoryName];
 
-        getPoints(POILayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList);
+        getPoints(poiLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList);
       });
       document.getElementById("resetUserPoint").addEventListener("click", () => {
-        POILayer.removeAll();
+        poiLayer.removeAll();
       })
     });
   }
 
-  //Funktion som lägger till användarens engna punker
-  //TODO: Ändra så det inte läggs ut punkter när man klickar på redan utlagda punkter. Förslagsvis genom att använda en checklåda för ett "skapa egna punkter läge".
+  //Funktion som lägger till användarens egna punkter.
   view.on("click", function(event) {
     if (document.getElementById("resetbox").checked == true) {
       let userPOIname = prompt("Skriv in namnet på din POI.");
@@ -155,7 +154,7 @@ require([
           content: userPOIdesc
         }
       });
-      POILayer.add(userPoint);
+      poiLayer.add(userPoint);
     }
   });
   initButtons();
