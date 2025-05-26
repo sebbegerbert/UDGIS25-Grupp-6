@@ -36,6 +36,7 @@ require([
 
 
 
+
   //Kategorier med filnamn utan filändelse 
   const categories = {
     barnvanliga: ["lekplatser", "pulkabackar"],
