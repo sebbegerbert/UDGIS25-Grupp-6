@@ -186,6 +186,12 @@ require([
       document.getElementById("resetUserPoint").addEventListener("click", () => {
         map.layers.removeAll();
         polyPoint = [];
+        //TODO: ANTON - Fixa en bättre lösning för att förhindra flera av samma punkt.
+        barnvanligaLayer.removeAll();
+        motionLayer.removeAll();
+        naturLayer.removeAll();
+        serviceLayer.removeAll();
+        trygghetLayer.removeAll();
         userLayer.removeAll();
         loadedCategories.clear();
       })
