@@ -128,5 +128,21 @@ require([
     });
   }
 
+  input.addEventListener('keydown', function(event) {
+  if (event.key === 'Enter') {
+    searchJSON(input.value);
+  }
+  });
+
+  function searchJSON(query) {
+    searchList.innerHTML = "";
+
+    const search = query.toLowerCase();
+
+    const results = data.filter(item =>
+    );
+  }
+
   initButtons();
 });
+
