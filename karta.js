@@ -1,4 +1,4 @@
-let map, view, graphicsLayer
+let map, view, graphicsLayer, sparFilName
 
 require([
   "esri/Map",
@@ -26,7 +26,15 @@ require([
   });
 
   var poiLayer = new GraphicsLayer();
-  map.add(poiLayer);
+  var barnvanligaLayer = new GraphicsLayer();
+  var motionLayer = new GraphicsLayer();
+  var naturLayer = new GraphicsLayer();
+  var serviceLayer = new GraphicsLayer();
+  var trygghetLayer = new GraphicsLayer();
+  var userLayer = new GraphicsLayer();
+
+
+
 
   //Kategorier med filnamn utan filändelse 
   const categories = {
@@ -43,19 +51,18 @@ require([
   }
 
   //Får filnamn (utan filändelse) i form av en lista och skickar det med rätt filändelse till showPoints
-  function getPoints(poiLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList) {
-    poiLayer.removeAll();
+  function getPoints(poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList) {
 
     fileList.forEach(fileName => {
       var json_file = ("JSON/" + fileName + ".json")
 
       fetchData(json_file).then(data => {
-        showPoints(data, poiLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate);
+        showPoints(data, poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate);
       });
     });
   }
 
-  function showPoints(data, poiLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate) {
+  function showPoints(data, poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate) {
     data.features.forEach(feature => {
 
       const geomType = feature.geometry.type;
@@ -101,7 +108,9 @@ require([
         console.warn("Unsupported geometry type:", geomType)
       }
 
+
       //Ritar geometrier och lägger till popup ruta
+      // TODO: ANTON - Hitta någon smidig lösning för att förhindra att flera av samma punkt ritas.
       var graphic = new Graphic({
         geometry: geometry,
         symbol: symbol,
@@ -111,7 +120,29 @@ require([
           content: "{BESKR_KORT}"
         }
       });
-      poiLayer.add(graphic);
+      //Lägger till olika lager baserat på kategorierna så det går att visa flera kategorier samtidigt.
+      switch (sparFilName) {
+        case "barnvanliga":
+          barnvanligaLayer.add(graphic);
+          map.add(barnvanligaLayer)
+          break;
+        case "motion":
+          motionLayer.add(graphic);
+          map.add(motionLayer);
+          break;
+        case "natur":
+          naturLayer.add(graphic);
+          map.add(naturLayer);
+          break;
+        case "service":
+          serviceLayer.add(graphic);
+          map.add(serviceLayer);
+          break;
+        case "trygghet":
+          trygghetLayer.add(graphic);
+          map.add(trygghetLayer);
+          break;
+      }
     });
   };
 
@@ -123,11 +154,12 @@ require([
       button.addEventListener("click", () => {
         const categoryName = button.name;
         const fileList = categories[categoryName];
+        sparFilName = categoryName;
 
-        getPoints(poiLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList);
+        getPoints(poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList);
       });
       document.getElementById("resetUserPoint").addEventListener("click", () => {
-        poiLayer.removeAll();
+        map.layers.removeAll();
         polyPoint = [];
       })
     });
@@ -137,6 +169,8 @@ require([
 
   let polyPoint = [];
   view.on("click", function(event) {
+    map.add(userLayer);
+
     if (document.getElementById("userPOIbox").checked == true) {
       document.getElementById("userPolygonbox").checked = false;
 
@@ -160,7 +194,7 @@ require([
           content: userPOIdesc
         }
       });
-      poiLayer.add(userPoint);
+      userLayer.add(userPoint);
       //Funktion för att rita en polygon.
       //TODO: ANTON - Jag ska snygga till den här funktionen. Jag är inte alls överens med JavaScript...
     } else if (document.getElementById("userPolygonbox").checked == true) {
@@ -181,7 +215,7 @@ require([
         },
 
       });
-      poiLayer.add(userPolyPoint);
+      userLayer.add(userPolyPoint);
       const polygon = new Polygon({
         rings: [polyPoint],
       })
@@ -193,7 +227,7 @@ require([
           size: 8,
         },
       });
-      poiLayer.add(userPolygon);
+      userLayer.add(userPolygon);
     }
   });
   initButtons();
