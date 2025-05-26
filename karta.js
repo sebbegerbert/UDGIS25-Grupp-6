@@ -10,8 +10,9 @@ require([
   "esri/symbols/PictureMarkerSymbol",
   "esri/PopupTemplate",
   "esri/geometry/support/webMercatorUtils",
+  "esri/geometry/Polygon",
 
-], function(Map, MapView, GraphicsLayer, Graphic, Point, Polyline, PictureMarkerSymbol, PopupTemplate, webMercatorUtils) {
+], function(Map, MapView, GraphicsLayer, Graphic, Point, Polyline, PictureMarkerSymbol, PopupTemplate, webMercatorUtils, Polygon) {
 
   map = new Map({
     basemap: "streets"
@@ -127,13 +128,18 @@ require([
       });
       document.getElementById("resetUserPoint").addEventListener("click", () => {
         poiLayer.removeAll();
+        polyPoint = [];
       })
     });
   }
 
   //Funktion som lägger till användarens egna punkter.
+
+  let polyPoint = [];
   view.on("click", function(event) {
-    if (document.getElementById("resetbox").checked == true) {
+    if (document.getElementById("userPOIbox").checked == true) {
+      document.getElementById("userPolygonbox").checked = false;
+
       let userPOIname = prompt("Skriv in namnet på din POI.");
       let userPOIdesc = prompt("Skriv in en beskrivning.");
 
@@ -155,6 +161,39 @@ require([
         }
       });
       poiLayer.add(userPoint);
+      //Funktion för att rita en polygon.
+      //TODO: ANTON - Jag ska snygga till den här funktionen. Jag är inte alls överens med JavaScript...
+    } else if (document.getElementById("userPolygonbox").checked == true) {
+      document.getElementById("userPOIbox").checked = false;
+
+      var geoPoint = webMercatorUtils.webMercatorToGeographic(event.mapPoint);
+      polyPoint.push([geoPoint.x, geoPoint.y]);
+
+      var userPolyPoint = new Graphic({
+        geometry: new Point({
+          longitude: geoPoint.x,
+          latitude: geoPoint.y,
+        }),
+        symbol: {
+          type: "simple-marker",
+          color: "pink",
+          size: 8,
+        },
+
+      });
+      poiLayer.add(userPolyPoint);
+      const polygon = new Polygon({
+        rings: [polyPoint],
+      })
+      var userPolygon = new Graphic({
+        geometry: polygon,
+        symbol: {
+          type: "simple-fill",
+          color: [255, 0, 255, 0.2],
+          size: 8,
+        },
+      });
+      poiLayer.add(userPolygon);
     }
   });
   initButtons();
