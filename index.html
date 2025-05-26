@@ -9,6 +9,9 @@
   <script src="https://js.arcgis.com/4.32/"></script>
   <script src="karta.js"></script>
   <title>Friluftskartan Gävle – en interaktiv webbapplikation</title>
+  <!-- Faviconen är tagen från HiGs publika bildbank ("https://bildbank.hig.se/")-->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
   <style>
     html,
     body,
@@ -33,7 +36,13 @@
     <input type="text" id="searchBox" placeholder="keydown">
     <ul id="searchResult"></ul>
   </div>
-
+  <div class="reset">
+    <input type="checkbox" id="userPOIbox">
+    <label for="resetbox">Skapa egna POIs</label>
+    <input type="checkbox" id="userPolygonbox">
+    <label for="resetbox">Rita en polygon</label>
+    <button class="resetButton" id="resetUserPoint"> Återställ användarpunkter</button>
+  </div>
   <div id="mapDiv"></div>
 </body>
 

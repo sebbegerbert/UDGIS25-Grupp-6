@@ -260,5 +260,71 @@ require([
       userLayer.add(userPolygon);
     }
   });
+  //Funktion som lägger till användarens egna punkter.
+
+  let polyPoint = [];
+  view.on("click", function(event) {
+    map.add(userLayer);
+
+    if (document.getElementById("userPOIbox").checked == true) {
+      document.getElementById("userPolygonbox").checked = false;
+
+      let userPOIname = prompt("Skriv in namnet på din POI.");
+      let userPOIdesc = prompt("Skriv in en beskrivning.");
+
+      var geoPoint = webMercatorUtils.webMercatorToGeographic(event.mapPoint);
+      var uPoint = new Point({
+        longitude: geoPoint.x,
+        latitude: geoPoint.y
+      });
+      var userPoint = new Graphic({
+        geometry: uPoint,
+        symbol: {
+          type: "simple-marker",
+          color: "pink",
+          size: 8,
+        },
+        popupTemplate: {
+          title: userPOIname,
+          content: userPOIdesc
+        }
+      });
+      userLayer.add(userPoint);
+      //Funktion för att rita en polygon.
+      //TODO: ANTON - Jag ska snygga till den här funktionen. Jag är inte alls överens med JavaScript...
+    } else if (document.getElementById("userPolygonbox").checked == true) {
+      document.getElementById("userPOIbox").checked = false;
+
+      var geoPoint = webMercatorUtils.webMercatorToGeographic(event.mapPoint);
+      polyPoint.push([geoPoint.x, geoPoint.y]);
+
+      var userPolyPoint = new Graphic({
+        geometry: new Point({
+          longitude: geoPoint.x,
+          latitude: geoPoint.y,
+        }),
+        symbol: {
+          type: "simple-marker",
+          color: "pink",
+          size: 8,
+        },
+
+      });
+      userLayer.add(userPolyPoint);
+      const polygon = new Polygon({
+        rings: [polyPoint],
+      })
+      var userPolygon = new Graphic({
+        geometry: polygon,
+        symbol: {
+          type: "simple-fill",
+          color: [255, 0, 255, 0.2],
+          size: 8,
+        },
+      });
+      userLayer.add(userPolygon);
+    }
+  });
   initButtons();
 });
+
