@@ -50,14 +50,14 @@ require([
   let allLoadedData = [];
 
   async function fetchData(file, category) {
-    try{
+    try {
       const response = await fetch(file);
       if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
       const data = await response.json();
-      return {data, category};
+      return { data, category };
     } catch (err) {
       console.error("fetchData Error:", err);
-      return {data: null, category};
+      return { data: null, category };
     }
   }
 
@@ -66,7 +66,7 @@ require([
     fileList.forEach(fileName => {
       var json_file = ("JSON/" + fileName + ".json")
 
-      fetchData(json_file, category).then(({data, category}) => {
+      fetchData(json_file, category).then(({ data, category }) => {
         if (data && data.features) {
           showPoints(data, poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, category);
         } else {
@@ -77,7 +77,7 @@ require([
   }
 
   function showPoints(data, poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, category) {
-      data.features.forEach(feature => {
+    data.features.forEach(feature => {
       allLoadedData.push({
         ...feature,
         category: category
@@ -186,6 +186,7 @@ require([
       document.getElementById("resetUserPoint").addEventListener("click", () => {
         map.layers.removeAll();
         polyPoint = [];
+        userLayer.removeAll();
         loadedCategories.clear();
       })
     });
@@ -305,7 +306,7 @@ require([
 
     const results = await Promise.all(promises);
     console.log("results from fetchData:", results);
-    results.forEach(({data, category}) => {
+    results.forEach(({ data, category }) => {
       if (data && data.features) {
         data.features.forEach(feature => {
           allLoadedData.push({
