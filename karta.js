@@ -47,14 +47,14 @@ require([
   const allGraphics = [];
 
   async function fetchData(file, category) {
-    try{
+    try {
       const response = await fetch(file);
       if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
       const data = await response.json();
-      return {data, category};
+      return { data, category };
     } catch (err) {
       console.error("fetchData Error:", err);
-      return {data: null, category};
+      return { data: null, category };
     }
   }
 
@@ -63,7 +63,7 @@ require([
     fileList.forEach(fileName => {
       var json_file = ("JSON/" + fileName + ".json")
 
-      fetchData(json_file, category).then(({data, category}) => {
+      fetchData(json_file, category).then(({ data, category }) => {
         if (data && data.features) {
           showPoints(data, poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, category);
         } else {
@@ -74,7 +74,7 @@ require([
   }
 
   function showPoints(data, poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, category) {
-      data.features.forEach(feature => {
+    data.features.forEach(feature => {
       allLoadedData.push({
         ...feature,
         category: category
@@ -190,6 +190,13 @@ require([
       document.getElementById("resetUserPoint").addEventListener("click", () => {
         map.layers.removeAll();
         polyPoint = [];
+        //TODO: ANTON - Fixa en bättre lösning för att förhindra flera av samma punkt.
+        barnvanligaLayer.removeAll();
+        motionLayer.removeAll();
+        naturLayer.removeAll();
+        serviceLayer.removeAll();
+        trygghetLayer.removeAll();
+        userLayer.removeAll();
         loadedCategories.clear();
       })
     });
@@ -351,7 +358,7 @@ require([
 
     const results = await Promise.all(promises);
     console.log("results from fetchData:", results);
-    results.forEach(({data, category}) => {
+    results.forEach(({ data, category }) => {
       if (data && data.features) {
         data.features.forEach(feature => {
           allLoadedData.push({
