@@ -393,7 +393,8 @@ require([
       }
     });
   }
-  //TODO: ANTON - Testat att ta contains-delen från lab4. Måste snyggas till, men funkar typ som den ska.
+  //TODO: ANTON - Testat att ta contains-delen från lab4. Måste snyggas till, men funkar
+  //typ som den ska.
   function polygonFiler(polygon) {
     allGraphics.forEach(({ graphic }) => {
       var isInside = geometryEngine.contains(polygon, graphic.geometry);
