@@ -318,8 +318,15 @@ require([
             symbol = {
 
             }
-          } else if (geomType === "LineString" || geomType === "MultiLineString") {
-            const firstCoord = coord[0][0] || coord[0];
+          } else if (geomType === "LineString") {
+            const firstCoord = coord[0];
+            centerPoint = {
+              type: "point",
+              longitude: firstCoord[0],
+              latitude: firstCoord[1]
+            };
+          } else if (geomType === "MultiLineString") {
+            const firstCoord = coord[0][0];
             centerPoint = {
               type: "point",
               longitude: firstCoord[0],
