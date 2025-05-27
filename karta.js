@@ -65,7 +65,7 @@ require([
 
       fetchData(json_file, category).then(({ data, category }) => {
         if (data && data.features) {
-          showPoints(data, poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, category);
+          showPoints(data, poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, category, fileName);
         } else {
           console.warn(`Invalid or empty data for file ${json_file}`);
         }
@@ -73,7 +73,7 @@ require([
     });
   }
 
-  function showPoints(data, poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, category) {
+  function showPoints(data, poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, category, fileName) {
     data.features.forEach(feature => {
       allLoadedData.push({
         ...feature,
@@ -95,7 +95,8 @@ require([
           latitude: coord[1]
         };
         symbol = {
-          type: "simple-marker",
+          type: "picture-marker",
+          url: `icon/${fileName}.png`,
           color: "pink",
           size: 8
         };
