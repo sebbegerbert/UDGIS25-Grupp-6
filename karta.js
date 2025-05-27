@@ -104,9 +104,10 @@ require([
           type: "polyline",
           paths: [coord]
         };
+        const color = stringToColor(feature.properties.NAMN);
         symbol = {
           type: "simple-line",
-          color: "red",
+          color: color,
           width: 2
         };
       } else if (geomType === "MultiLineString") {
@@ -114,9 +115,10 @@ require([
           type: "polyline",
           paths: [coord]
         };
+        const color = stringToColor(feature.properties.NAMN);
         symbol = {
           type: "simple-line",
-          color: "red",
+          color: color,
           width: 2
         };
       } else {
@@ -174,6 +176,15 @@ require([
 
     loadedCategories.add(category);
   };
+
+  function stringToColor(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+    return "#" + "00000".substring(0, 6 - c.length) + c;
+  }
 
   //Med hjälp av knapp namn väljs kategori och skickas till getPoints
   function initButtons(point) {
