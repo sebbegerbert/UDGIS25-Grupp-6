@@ -11,8 +11,9 @@ require([
   "esri/PopupTemplate",
   "esri/geometry/support/webMercatorUtils",
   "esri/geometry/Polygon",
+  "esri/geometry/geometryEngine"
 
-], function(Map, MapView, GraphicsLayer, Graphic, Point, Polyline, PictureMarkerSymbol, PopupTemplate, webMercatorUtils, Polygon) {
+], function(Map, MapView, GraphicsLayer, Graphic, Point, Polyline, PictureMarkerSymbol, PopupTemplate, webMercatorUtils, Polygon, geometryEngine) {
 
   map = new Map({
     basemap: "streets"
@@ -277,7 +278,9 @@ require([
         },
       });
       userLayer.add(userPolygon);
+      polygonFiler(polygon)
     }
+
   });
 
   const input = document.getElementById("searchBox");
@@ -388,6 +391,13 @@ require([
       } else {
         console.warn("Missing features in:", category);
       }
+    });
+  }
+  //TODO: ANTON - Testat att ta contains-delen från lab4. Måste snyggas till, men funkar typ som den ska.
+  function polygonFiler(polygon) {
+    allGraphics.forEach(({ graphic }) => {
+      var isInside = geometryEngine.contains(polygon, graphic.geometry);
+      graphic.visible = isInside;
     });
   }
   initButtons();
