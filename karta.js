@@ -33,6 +33,12 @@ require([
   var trygghetLayer = new GraphicsLayer();
   var userLayer = new GraphicsLayer();
 
+  map.add(barnvanligaLayer);
+  map.add(motionLayer);
+  map.add(naturLayer);
+  map.add(serviceLayer);
+  map.add(trygghetLayer);
+  map.add(userLayer);
   //Kategorier med filnamn utan filändelse 
   const categories = {
     barnvanliga: ["lekplatser", "pulkabackar"],
@@ -149,27 +155,22 @@ require([
       switch (category) {
         case "barnvanliga":
           barnvanligaLayer.add(graphic);
-          map.add(barnvanligaLayer);
           loadedCategories.add("barnvanliga");
           break;
         case "motion":
           motionLayer.add(graphic);
-          map.add(motionLayer);
           loadedCategories.add("motion");
           break;
         case "natur":
           naturLayer.add(graphic);
-          map.add(naturLayer);
           loadedCategories.add("natur");
           break;
         case "service":
           serviceLayer.add(graphic);
-          map.add(serviceLayer);
           loadedCategories.add("service");
           break;
         case "trygghet":
           trygghetLayer.add(graphic);
-          map.add(trygghetLayer);
           loadedCategories.add("trygghet");
           break;
       }
@@ -200,7 +201,7 @@ require([
         getPoints(poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList, categoryName);
       });
       document.getElementById("resetUserPoint").addEventListener("click", () => {
-        map.layers.removeAll();
+        // map.layers.removeAll();
         polyPoint = [];
         //TODO: ANTON - Fixa en bättre lösning för att förhindra flera av samma punkt.
         barnvanligaLayer.removeAll();
@@ -218,7 +219,6 @@ require([
 
   let polyPoint = [];
   view.on("click", function(event) {
-    map.add(userLayer);
 
     if (document.getElementById("userPOIbox").checked == true) {
       document.getElementById("userPolygonbox").checked = false;
@@ -310,58 +310,58 @@ require([
     if (results.length === 0) {
       searchResult.innerHTML = "<li>Inga träffar hittades.</li>";
     }
-      results.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = `${item.properties.NAMN} (${item.category})`;
+    results.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.properties.NAMN} (${item.category})`;
 
-        li.addEventListener("click", () => {
-          searchResult.innerHTML = "";
-          const geomType = item.geometry.type;
-          const coord = item.geometry.coordinates;
+      li.addEventListener("click", () => {
+        searchResult.innerHTML = "";
+        const geomType = item.geometry.type;
+        const coord = item.geometry.coordinates;
 
-          let centerPoint;
+        let centerPoint;
 
-          if (geomType === "Point") {
-            centerPoint = { 
-              type: "point",
-              longitude: coord[0],
-              latitude: coord[1]
-            };
-            symbol = {
+        if (geomType === "Point") {
+          centerPoint = {
+            type: "point",
+            longitude: coord[0],
+            latitude: coord[1]
+          };
+          symbol = {
 
-            }
-          } else if (geomType === "LineString") {
-            const firstCoord = coord[0];
-            centerPoint = {
-              type: "point",
-              longitude: firstCoord[0],
-              latitude: firstCoord[1]
-            };
-          } else if (geomType === "MultiLineString") {
-            const firstCoord = coord[0][0];
-            centerPoint = {
-              type: "point",
-              longitude: firstCoord[0],
-              latitude: firstCoord[1]
-            };
-          } else {
-            console.warn("Unsuported geometry for centering:", geomType);
-            return;
           }
+        } else if (geomType === "LineString") {
+          const firstCoord = coord[0];
+          centerPoint = {
+            type: "point",
+            longitude: firstCoord[0],
+            latitude: firstCoord[1]
+          };
+        } else if (geomType === "MultiLineString") {
+          const firstCoord = coord[0][0];
+          centerPoint = {
+            type: "point",
+            longitude: firstCoord[0],
+            latitude: firstCoord[1]
+          };
+        } else {
+          console.warn("Unsuported geometry for centering:", geomType);
+          return;
+        }
 
-          view.goTo({
-            target: new Point(centerPoint),
-            zoom: 15
-          }).then (() => {
-            view.popup.open({
-              location: new Point(centerPoint),
-              title: item.properties.NAMN || "Ingen titel",
-              content: item.properties.BESKR_KORT || "Ingen beskrivning",
-            });
+        view.goTo({
+          target: new Point(centerPoint),
+          zoom: 15
+        }).then(() => {
+          view.popup.open({
+            location: new Point(centerPoint),
+            title: item.properties.NAMN || "Ingen titel",
+            content: item.properties.BESKR_KORT || "Ingen beskrivning",
           });
         });
-        searchResult.appendChild(li);
       });
+      searchResult.appendChild(li);
+    });
   }
 
   async function loadAllCategoriesForSearch() {
