@@ -33,10 +33,6 @@ require([
   var trygghetLayer = new GraphicsLayer();
   var userLayer = new GraphicsLayer();
 
-
-
-
-
   //Kategorier med filnamn utan filändelse 
   const categories = {
     barnvanliga: ["lekplatser", "pulkabackar"],
@@ -48,6 +44,7 @@ require([
 
   let loadedCategories = new Set();
   let allLoadedData = [];
+  const allGraphics = [];
 
   async function fetchData(file, category) {
     try{
@@ -129,7 +126,7 @@ require([
 
       //Ritar geometrier och lägger till popup ruta
       // TODO: ANTON - Hitta någon smidig lösning för att förhindra att flera av samma punkt ritas.
-      var graphic = new Graphic({
+      const graphic = new Graphic({
         geometry: geometry,
         symbol: symbol,
         attributes: feature.properties,
@@ -138,6 +135,13 @@ require([
           content: "{BESKR_KORT}"
         }
       });
+
+      allGraphics.push({
+        graphic: graphic,
+        category: category,
+        feature: feature
+      });
+
       //Lägger till olika lager baserat på kategorierna så det går att visa flera kategorier samtidigt.
       switch (category) {
         case "barnvanliga":
@@ -267,7 +271,7 @@ require([
   });
 
   //Sök funktion
-  async function searchJSON(query) {
+  async function searchJSON(query, Graphic) {
     searchResult.innerHTML = "";
     const search = query.toLowerCase();
 
@@ -281,15 +285,57 @@ require([
       return name.includes(search) || description.includes(search);
     });
 
+    let geometry;
+    let symbol;
+
     if (results.length === 0) {
       searchResult.innerHTML = "<li>Inga träffar hittades.</li>";
-    } else {
+    }
       results.forEach(item => {
         const li = document.createElement("li");
         li.textContent = `${item.properties.NAMN} (${item.category})`;
+
+        li.addEventListener("click", () => {
+          searchResult.innerHTML = "";
+          const geomType = item.geometry.type;
+          const coord = item.geometry.coordinates;
+
+          let centerPoint;
+
+          if (geomType === "Point") {
+            centerPoint = { 
+              type: "point",
+              longitude: coord[0],
+              latitude: coord[1]
+            };
+            symbol = {
+
+            }
+          } else if (geomType === "LineString" || geomType === "MultiLineString") {
+            const firstCoord = coord[0][0] || coord[0];
+            centerPoint = {
+              type: "point",
+              longitude: firstCoord[0],
+              latitude: firstCoord[1]
+            };
+          } else {
+            console.warn("Unsuported geometry for centering:", geomType);
+            return;
+          }
+
+          view.goTo({
+            target: new Point(centerPoint),
+            zoom: 15
+          }).then (() => {
+            view.popup.open({
+              location: new Point(centerPoint),
+              title: item.properties.NAMN || "Ingen titel",
+              content: item.properties.BESKR_KORT || "Ingen beskrivning",
+            });
+          });
+        });
         searchResult.appendChild(li);
       });
-    }
   }
 
   async function loadAllCategoriesForSearch() {
@@ -300,7 +346,7 @@ require([
       fileList.forEach(fileName => {
         var json_file = ("JSON/" + fileName + ".json")
         promises.push(fetchData(json_file, category));
-      })
+      });
     }
 
     const results = await Promise.all(promises);
