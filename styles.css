@@ -30,3 +30,17 @@
       padding: 5px 10px;
       cursor: pointer;
     }
+
+    #motionssparDiv {
+      visibility: hidden;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 99;
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px #888;
+      margin-left: 50px;
+      margin-top: 100px;
+    }

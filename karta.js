@@ -52,6 +52,7 @@ require([
   let loadedCategories = new Set();
   let allLoadedData = [];
   const allGraphics = [];
+  var motionssparByName = [];
 
   async function fetchData(file, category) {
     try {
@@ -159,6 +160,11 @@ require([
           loadedCategories.add("barnvanliga");
           break;
         case "motion":
+          if (feature.geometry.type == "LineString" || feature.geometry.type == "MultiLineString") {
+            const name = (feature.properties.NAMN).trim();
+            console.log(name);
+            motionssparByName[name] = graphic;
+          }
           motionLayer.add(graphic);
           loadedCategories.add("motion");
           break;
@@ -192,6 +198,7 @@ require([
   //Med hjälp av knapp namn väljs kategori och skickas till getPoints
   function initButtons(point) {
     const buttons = document.querySelectorAll(".paneButton");
+    const motionsButtons = document.querySelectorAll(".motionCheckbox")
 
     buttons.forEach(button => {
       button.addEventListener("click", () => {
@@ -200,7 +207,24 @@ require([
         //sparFilName = categoryName;
 
         getPoints(poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList, categoryName);
+        if (categoryName == "motion") {
+          document.getElementById("motionssparDiv").style.visibility = "visible";
+        }
       });
+      // Initierar knapparna för att välja enskilda motionsspår.
+      motionsButtons.forEach(checkbox => {
+        const motionssparNamn = checkbox.id;
+        const motionssparGraphic = motionssparByName[motionssparNamn];
+
+        checkbox.addEventListener("change", () => {
+          const motionssparNamn = checkbox.id;
+          const motionssparGraphic = motionssparByName[motionssparNamn];
+          if (motionssparGraphic) {
+            motionssparGraphic.visible = checkbox.checked;
+          }
+        })
+
+      })
       document.getElementById("resetUserPoint").addEventListener("click", () => {
         // map.layers.removeAll();
         polyPoint = [];
@@ -212,7 +236,12 @@ require([
         trygghetLayer.removeAll();
         userLayer.removeAll();
         loadedCategories.clear();
+        document.getElementById("motionssparDiv").style.visibility = "hidden";
+        resetMotionsboxes();
       })
+      //Knappar för att visa eller dölja alla spår.
+      document.getElementById("resetMotionsspar").addEventListener("click", resetMotionsboxes);
+      document.getElementById("hideMotionsspar").addEventListener("click", unsetMotionsboxes);
     });
   }
 
@@ -400,6 +429,32 @@ require([
       var isInside = geometryEngine.contains(polygon, graphic.geometry);
       graphic.visible = isInside;
     });
+  }
+
+  function resetMotionsboxes() {
+    const motionsboxes = document.querySelectorAll(".motionCheckbox")
+
+    motionsboxes.forEach(checkbox => {
+      checkbox.checked = true;
+      const motionssparNamn = checkbox.id;
+      const motionssparGraphic = motionssparByName[motionssparNamn];
+      if (motionssparGraphic) {
+        motionssparGraphic.visible = checkbox.checked;
+      }
+    })
+  }
+
+  function unsetMotionsboxes() {
+    const motionsboxes = document.querySelectorAll(".motionCheckbox")
+
+    motionsboxes.forEach(checkbox => {
+      checkbox.checked = false;
+      const motionssparNamn = checkbox.id;
+      const motionssparGraphic = motionssparByName[motionssparNamn];
+      if (motionssparGraphic) {
+        motionssparGraphic.visible = checkbox.checked;
+      }
+    })
   }
   initButtons();
 });
