@@ -48,6 +48,7 @@ require([
     service: ["offentliga_toaletter", "papperskorgar"],
     trygghet: ["livraddningsutrustning"]
   };
+  let barnvanligaToggle = false, motionToggle = false, naturToggle = false, serviceToggle = false, trygghetToggle = false;
 
   let loadedCategories = new Set();
   let allLoadedData = [];
@@ -134,9 +135,7 @@ require([
         console.warn("Unsupported geometry type:", geomType)
       }
 
-
       //Ritar geometrier och lägger till popup ruta
-      // TODO: ANTON - Hitta någon smidig lösning för att förhindra att flera av samma punkt ritas.
       const graphic = new Graphic({
         geometry: geometry,
         symbol: symbol,
@@ -156,30 +155,54 @@ require([
       //Lägger till olika lager baserat på kategorierna så det går att visa flera kategorier samtidigt.
       switch (category) {
         case "barnvanliga":
-          barnvanligaLayer.add(graphic);
-          loadedCategories.add("barnvanliga");
+          if (barnvanligaToggle == true) {
+            barnvanligaLayer.add(graphic);
+            loadedCategories.add("barnvanliga");
+          } else if (barnvanligaToggle == false) {
+            barnvanligaLayer.removeAll();
+            loadedCategories.delete("barnvanliga");
+          }
           break;
         case "motion":
           if (feature.geometry.type == "LineString" || feature.geometry.type == "MultiLineString") {
             const name = (feature.properties.NAMN).trim();
-            console.log(name);
             motionssparByName[name] = graphic;
           }
-          motionLayer.add(graphic);
-          loadedCategories.add("motion");
-          break;
+          if (motionToggle == true) {
+            motionLayer.add(graphic);
+            loadedCategories.add("motion");
+          } else if (motionToggle == false) {
+            document.getElementById("motionssparDiv").style.visibility = "hidden";
+            resetMotionsboxes();
+            motionLayer.removeAll();
+            loadedCategories.delete("motion");
+          } break;
         case "natur":
-          naturLayer.add(graphic);
-          loadedCategories.add("natur");
+          if (naturToggle == true) {
+            naturLayer.add(graphic);
+            loadedCategories.add("natur");
+          } else if (naturToggle == false) {
+            naturLayer.removeAll();
+            loadedCategories.delete("natur");
+          }
           break;
         case "service":
-          serviceLayer.add(graphic);
-          loadedCategories.add("service");
+          if (serviceToggle == true) {
+            serviceLayer.add(graphic);
+            loadedCategories.add("service");
+          } else if (serviceToggle == false) {
+            serviceLayer.removeAll();
+            loadedCategories.delete("service");
+          }
           break;
         case "trygghet":
-          trygghetLayer.add(graphic);
-          loadedCategories.add("trygghet");
-          break;
+          if (trygghetToggle == true) {
+            trygghetLayer.add(graphic);
+            loadedCategories.add("trygghet");
+          } else if (trygghetToggle == false) {
+            trygghetLayer.removeAll();
+            loadedCategories.delete("trygghet");
+          } break;
       }
     });
 
@@ -205,6 +228,44 @@ require([
         const categoryName = button.name;
         const fileList = categories[categoryName];
         //sparFilName = categoryName;
+        switch (categoryName) {
+          case "barnvanliga":
+            if (barnvanligaToggle == false)
+              barnvanligaToggle = true;
+            else if (barnvanligaToggle == true) {
+              barnvanligaToggle = false;
+            }
+            break;
+          case "motion":
+            if (motionToggle == false)
+              motionToggle = true;
+            else if (motionToggle == true) {
+              motionToggle = false;
+            }
+            break;
+          case "natur":
+            if (naturToggle == false)
+              naturToggle = true;
+            else if (naturToggle == true) {
+              naturToggle = false;
+            }
+            break;
+          case "service":
+            if (serviceToggle == false)
+              serviceToggle = true;
+            else if (serviceToggle == true) {
+              serviceToggle = false;
+            }
+            break;
+          case "trygghet":
+            if (trygghetToggle == false)
+              trygghetToggle = true;
+            else if (trygghetToggle == true) {
+              trygghetToggle = false;
+            }
+            break;
+        }
+
 
         getPoints(poiLayer, barnvanligaLayer, motionLayer, naturLayer, serviceLayer, trygghetLayer, Graphic, Point, PictureMarkerSymbol, PopupTemplate, fileList, categoryName);
         if (categoryName == "motion") {
@@ -228,7 +289,6 @@ require([
       document.getElementById("resetUserPoint").addEventListener("click", () => {
         // map.layers.removeAll();
         polyPoint = [];
-        //TODO: ANTON - Fixa en bättre lösning för att förhindra flera av samma punkt.
         barnvanligaLayer.removeAll();
         motionLayer.removeAll();
         naturLayer.removeAll();
@@ -238,6 +298,7 @@ require([
         loadedCategories.clear();
         document.getElementById("motionssparDiv").style.visibility = "hidden";
         resetMotionsboxes();
+        barnvanligaToggle = false, motionToggle = false, naturToggle = false, serviceToggle = false, trygghetToggle = false;
       })
       //Knappar för att visa eller dölja alla spår.
       document.getElementById("resetMotionsspar").addEventListener("click", resetMotionsboxes);
@@ -274,8 +335,8 @@ require([
         }
       });
       userLayer.add(userPoint);
+
       //Funktion för att rita en polygon.
-      //TODO: ANTON - Jag ska snygga till den här funktionen. Jag är inte alls överens med JavaScript...
     } else if (document.getElementById("userPolygonbox").checked == true) {
       document.getElementById("userPOIbox").checked = false;
 
@@ -422,8 +483,7 @@ require([
       }
     });
   }
-  //TODO: ANTON - Testat att ta contains-delen från lab4. Måste snyggas till, men funkar
-  //typ som den ska.
+
   function polygonFiler(polygon) {
     allGraphics.forEach(({ graphic }) => {
       var isInside = geometryEngine.contains(polygon, graphic.geometry);
