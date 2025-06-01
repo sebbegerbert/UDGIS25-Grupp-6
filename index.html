@@ -36,10 +36,11 @@
     <label for="resetbox">Skapa egna POIs</label>
     <input type="checkbox" id="userPolygonbox">
     <label for="resetbox">Rita en polygon</label>
-    <button class="resetButton" id="resetUserPoint"> Återställ användarpunkter</button>
+    <button class="resetButton" id="resetUserPoint"> Återställ karta</button>
     <input type="text" id="searchBox" placeholder="">
     <ul id="searchResult"></ul>
   </div>
+  <!-- Måste hitta någon bra lösning för att denna div inte ska täcka sökresultaten-->
   <div class="motionsspar" id="motionssparDiv">
     <button class="resetButton" id="resetMotionsspar">Visa alla motionsspår</button>
     <button class="resetButton" id="hideMotionsspar">Dölj alla motionsspår</button></br>
@@ -137,9 +138,6 @@
     <label>Åbyvallen motionsspår 2,5 km</label>
     <input type="checkbox" class="motionCheckbox" id="Åbyvallen motionsspår 3,5 km" checked>
     <label>Åbyvallen motionsspår 3,5 km</label></br>
-
-
-
   </div>
   <div id="mapDiv"></div>
 </body>
