@@ -26,6 +26,7 @@
 </head>
 
 <body>
+  <div id="mapDiv"></div>
   <div class="buttons">
     <button class="paneButton" name="barnvanliga">Visa barnvänligt</button>
     <button class="paneButton" name="motion">Visa motion och träning</button>
@@ -39,107 +40,105 @@
     <button class="resetButton" id="resetUserPoint"> Återställ karta</button>
     <input type="text" id="searchBox" placeholder="">
     <ul id="searchResult"></ul>
+    <div class="motionsspar" id="motionssparDiv">
+      <button class="resetButton" id="resetMotionsspar">Visa alla motionsspår</button>
+      <button class="resetButton" id="hideMotionsspar">Dölj alla motionsspår</button></br>
+      <input type="checkbox" class="motionCheckbox" id="Bomhus motionsspår 4 km" checked>
+      <label>Bomhus motionsspår 4 km </label>
+      <input type="checkbox" class="motionCheckbox" id="Bomhus motionsspår 2 km" checked>
+      <label>Bomhus motionsspår 2 km </label>
+      <input type="checkbox" class="motionCheckbox" id="Bomhus naturstig" checked>
+      <label>Bomhus naturstig </label></br>
+      <input type="checkbox" class="motionCheckbox" id="Gavlehov motionsspår 2,5 km" checked>
+      <label>Gavlehov motionsspår 2,5 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Gavlehov motionsspår 5,5 km" checked>
+      <label>Gavlehov motionsspår 5,5 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Gavlehov tillgänglighetsspår" checked>
+      <label>Gavlehov tillgänglighetsspår</label></br>
+      <input type="checkbox" class="motionCheckbox" id="Hemlingby-Valbo köpcentrum, Gästrikeleden Etapp 1" checked>
+      <label>Hemlingby-Valbo köpcentrum, Gästrikeleden Etapp 1</label>
+      <input type="checkbox" class="motionCheckbox" id="Gysinge bruk-Hedesunda, Gästrikeleden etapp 14" checked>
+      <label>Gysinge bruk-Hedesunda, Gästrikeleden etapp 14</label>
+      <input type="checkbox" class="motionCheckbox" id="Hedesunda-Kågbo, Gästrikeleden etapp 15" checked>
+      <label>Hedesunda-Kågbo, Gästrikeleden etapp 15</label>
+      <input type="checkbox" class="motionCheckbox" id="Kågbo-Långhäll, Gästrikeleden etapp 16" checked>
+      <label>Kågbo-Långhäll, Gästrikeleden etapp 16</label>
+      <input type="checkbox" class="motionCheckbox" id="Långhäll-Hemlingby, Gästrikeleden etapp 17" checked>
+      <label>Långhäll-Hemlingby, Gästrikeleden etapp 17</label>
+      <input type="checkbox" class="motionCheckbox" id="Valbo köpcentrum-Högbo bruk, Gästrikeleden Etapp 2" checked>
+      <label>Valbo köpcentrum-Högbo bruk, Gästrikeleden Etapp 2</label></br>
+      <input type="checkbox" class="motionCheckbox" id="Hagaströms motionsspår" checked>
+      <label>Hagaströms motionsspår</label></br>
+      <input type="checkbox" class="motionCheckbox" id="Hedens motionsspår 1,9 km" checked>
+      <label>Hedens motionsspår 1,9 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hedens motionsspår 2,5 km" checked>
+      <label>Hedens motionsspår 2,5 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hedens motionsspår 3,4 km" checked>
+      <label>Hedens motionsspår 3,4 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hedens motionsspår 4 km" checked>
+      <label>Hedens motionsspår 4 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hedens motionsspår 5 km" checked>
+      <label>Hedens motionsspår 5 km</label></br>
+      <input type="checkbox" class="motionCheckbox" id="Hedesunda motionsspår 2,5 km" checked>
+      <label>Hedesunda motionsspår 2,5 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hedesunda motionsspår 2 km" checked>
+      <label>Hedesunda motionsspår 2 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hedesunda motionsspår 1 km" checked>
+      <label>Hedesunda motionsspår 1 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hedesunda motionsspår 5 km" checked>
+      <label>Hedesunda motionsspår 5 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hedesunda motionsspår 7 km" checked>
+      <label>Hedesunda motionsspår 7 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hedesunda motionsspår 17 km" checked>
+      <label>Hedesunda motionsspår 17 km</label></br>
+      <input type="checkbox" class="motionCheckbox" id="Barnens kulturstig" checked>
+      <label>Barnens kulturstig</label>
+      <input type="checkbox" class="motionCheckbox" id="Hemlingby motionsspår 2 km & Hemlingbyrundan" checked>
+      <label>Hemlingby motionsspår 2 km & Hemlingbyrundan</label>
+      <input type="checkbox" class="motionCheckbox" id="Hemlingby motionsspår 3 km" checked>
+      <label>Hemlingby motionsspår 3 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hemlingby motionsspår 2,5 km" checked>
+      <label>Hemlingby motionsspår 2,5 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hemlingby motionsspår 10 km" checked>
+      <label>Hemlingby motionsspår 10 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hemlingby motionsspår 6 km" checked>
+      <label>Hemlingby motionsspår 6 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hemlingby motionsspår 5 km" checked>
+      <label>Hemlingby motionsspår 5 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Hemlingby Naturstig" checked>
+      <label>Hemlingby Naturstig</label>
+      <input type="checkbox" class="motionCheckbox" id="Storskogen - upplevelsespår/barnspår" checked>
+      <label>Storskogen - upplevelsespår/barnspår</label></br>
+      <input type="checkbox" class="motionCheckbox" id="Kungsbäck motionsspår 3 km" checked>
+      <label>Kungsbäck motionsspår 3 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Kungsbäck motionsspår 5 km" checked>
+      <label>Kungsbäck motionsspår 5 km</label></br>
+      <input type="checkbox" class="motionCheckbox" id="Mariehovs motionsspår" checked>
+      <label>Mariehovs motionsspår</label></br>
+      <input type="checkbox" class="motionCheckbox" id="Norrlandets kustled" checked>
+      <label>Norrlandets kustled</label></br>
+      <input type="checkbox" class="motionCheckbox" id="Skidstavallen motionsspår 5,5 km" checked>
+      <label>Skidstavallen motionsspår 5,5 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Skidstavallen motionsspår 10 km" checked>
+      <label>Skidstavallen motionsspår 10 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Skidstavallen motionsspår 1,5 km" checked>
+      <label>Skidstavallen motionsspår 1,5 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Skidstavallen motionsspår 7 km" checked>
+      <label>Skidstavallen motionsspår 7 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Skidstavallen motionsspår 15 km" checked>
+      <label>Skidstavallen motionsspår 15 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Skidstavallen motionsspår 2,5 km" checked>
+      <label>Skidstavallen motionsspår 2,5 km</label></br>
+      <input type="checkbox" class="motionCheckbox" id="Valbo Sportcentrum motionsspår" checked>
+      <label>Valbo Sportcentrum motionsspår</label></br>
+      <input type="checkbox" class="motionCheckbox" id="Åbyvallen motionsspår 1,5 km" checked>
+      <label>Åbyvallen motionsspår 1,5 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Åbyvallen motionsspår 2,5 km" checked>
+      <label>Åbyvallen motionsspår 2,5 km</label>
+      <input type="checkbox" class="motionCheckbox" id="Åbyvallen motionsspår 3,5 km" checked>
+      <label>Åbyvallen motionsspår 3,5 km</label></br>
+    </div>
   </div>
-  <!-- Måste hitta någon bra lösning för att denna div inte ska täcka sökresultaten-->
-  <div class="motionsspar" id="motionssparDiv">
-    <button class="resetButton" id="resetMotionsspar">Visa alla motionsspår</button>
-    <button class="resetButton" id="hideMotionsspar">Dölj alla motionsspår</button></br>
-    <input type="checkbox" class="motionCheckbox" id="Bomhus motionsspår 4 km" checked>
-    <label>Bomhus motionsspår 4 km </label>
-    <input type="checkbox" class="motionCheckbox" id="Bomhus motionsspår 2 km" checked>
-    <label>Bomhus motionsspår 2 km </label>
-    <input type="checkbox" class="motionCheckbox" id="Bomhus naturstig" checked>
-    <label>Bomhus naturstig </label></br>
-    <input type="checkbox" class="motionCheckbox" id="Gavlehov motionsspår 2,5 km" checked>
-    <label>Gavlehov motionsspår 2,5 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Gavlehov motionsspår 5,5 km" checked>
-    <label>Gavlehov motionsspår 5,5 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Gavlehov tillgänglighetsspår" checked>
-    <label>Gavlehov tillgänglighetsspår</label></br>
-    <input type="checkbox" class="motionCheckbox" id="Hemlingby-Valbo köpcentrum, Gästrikeleden Etapp 1" checked>
-    <label>Hemlingby-Valbo köpcentrum, Gästrikeleden Etapp 1</label>
-    <input type="checkbox" class="motionCheckbox" id="Gysinge bruk-Hedesunda, Gästrikeleden etapp 14" checked>
-    <label>Gysinge bruk-Hedesunda, Gästrikeleden etapp 14</label>
-    <input type="checkbox" class="motionCheckbox" id="Hedesunda-Kågbo, Gästrikeleden etapp 15" checked>
-    <label>Hedesunda-Kågbo, Gästrikeleden etapp 15</label>
-    <input type="checkbox" class="motionCheckbox" id="Kågbo-Långhäll, Gästrikeleden etapp 16" checked>
-    <label>Kågbo-Långhäll, Gästrikeleden etapp 16</label>
-    <input type="checkbox" class="motionCheckbox" id="Långhäll-Hemlingby, Gästrikeleden etapp 17" checked>
-    <label>Långhäll-Hemlingby, Gästrikeleden etapp 17</label>
-    <input type="checkbox" class="motionCheckbox" id="Valbo köpcentrum-Högbo bruk, Gästrikeleden Etapp 2" checked>
-    <label>Valbo köpcentrum-Högbo bruk, Gästrikeleden Etapp 2</label></br>
-    <input type="checkbox" class="motionCheckbox" id="Hagaströms motionsspår" checked>
-    <label>Hagaströms motionsspår</label></br>
-    <input type="checkbox" class="motionCheckbox" id="Hedens motionsspår 1,9 km" checked>
-    <label>Hedens motionsspår 1,9 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hedens motionsspår 2,5 km" checked>
-    <label>Hedens motionsspår 2,5 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hedens motionsspår 3,4 km" checked>
-    <label>Hedens motionsspår 3,4 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hedens motionsspår 4 km" checked>
-    <label>Hedens motionsspår 4 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hedens motionsspår 5 km" checked>
-    <label>Hedens motionsspår 5 km</label></br>
-    <input type="checkbox" class="motionCheckbox" id="Hedesunda motionsspår 2,5 km" checked>
-    <label>Hedesunda motionsspår 2,5 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hedesunda motionsspår 2 km" checked>
-    <label>Hedesunda motionsspår 2 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hedesunda motionsspår 1 km" checked>
-    <label>Hedesunda motionsspår 1 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hedesunda motionsspår 5 km" checked>
-    <label>Hedesunda motionsspår 5 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hedesunda motionsspår 7 km" checked>
-    <label>Hedesunda motionsspår 7 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hedesunda motionsspår 17 km" checked>
-    <label>Hedesunda motionsspår 17 km</label></br>
-    <input type="checkbox" class="motionCheckbox" id="Barnens kulturstig" checked>
-    <label>Barnens kulturstig</label>
-    <input type="checkbox" class="motionCheckbox" id="Hemlingby motionsspår 2 km & Hemlingbyrundan" checked>
-    <label>Hemlingby motionsspår 2 km & Hemlingbyrundan</label>
-    <input type="checkbox" class="motionCheckbox" id="Hemlingby motionsspår 3 km" checked>
-    <label>Hemlingby motionsspår 3 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hemlingby motionsspår 2,5 km" checked>
-    <label>Hemlingby motionsspår 2,5 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hemlingby motionsspår 10 km" checked>
-    <label>Hemlingby motionsspår 10 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hemlingby motionsspår 6 km" checked>
-    <label>Hemlingby motionsspår 6 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hemlingby motionsspår 5 km" checked>
-    <label>Hemlingby motionsspår 5 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Hemlingby Naturstig" checked>
-    <label>Hemlingby Naturstig</label>
-    <input type="checkbox" class="motionCheckbox" id="Storskogen - upplevelsespår/barnspår" checked>
-    <label>Storskogen - upplevelsespår/barnspår</label></br>
-    <input type="checkbox" class="motionCheckbox" id="Kungsbäck motionsspår 3 km" checked>
-    <label>Kungsbäck motionsspår 3 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Kungsbäck motionsspår 5 km" checked>
-    <label>Kungsbäck motionsspår 5 km</label></br>
-    <input type="checkbox" class="motionCheckbox" id="Mariehovs motionsspår" checked>
-    <label>Mariehovs motionsspår</label></br>
-    <input type="checkbox" class="motionCheckbox" id="Norrlandets kustled" checked>
-    <label>Norrlandets kustled</label></br>
-    <input type="checkbox" class="motionCheckbox" id="Skidstavallen motionsspår 5,5 km" checked>
-    <label>Skidstavallen motionsspår 5,5 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Skidstavallen motionsspår 10 km" checked>
-    <label>Skidstavallen motionsspår 10 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Skidstavallen motionsspår 1,5 km" checked>
-    <label>Skidstavallen motionsspår 1,5 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Skidstavallen motionsspår 7 km" checked>
-    <label>Skidstavallen motionsspår 7 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Skidstavallen motionsspår 15 km" checked>
-    <label>Skidstavallen motionsspår 15 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Skidstavallen motionsspår 2,5 km" checked>
-    <label>Skidstavallen motionsspår 2,5 km</label></br>
-    <input type="checkbox" class="motionCheckbox" id="Valbo Sportcentrum motionsspår" checked>
-    <label>Valbo Sportcentrum motionsspår</label></br>
-    <input type="checkbox" class="motionCheckbox" id="Åbyvallen motionsspår 1,5 km" checked>
-    <label>Åbyvallen motionsspår 1,5 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Åbyvallen motionsspår 2,5 km" checked>
-    <label>Åbyvallen motionsspår 2,5 km</label>
-    <input type="checkbox" class="motionCheckbox" id="Åbyvallen motionsspår 3,5 km" checked>
-    <label>Åbyvallen motionsspår 3,5 km</label></br>
-  </div>
-  <div id="mapDiv"></div>
 </body>
 
 </html>

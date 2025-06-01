@@ -4,6 +4,7 @@
       margin: 0;
       height: 100%;
       width: 100%;
+      position: relative;
     }
 
     .buttons {
@@ -11,13 +12,14 @@
       top: 10px;
       left: 10px;
       z-index: 99;
-      background: white;
+      background-color: rgba(255, 255, 255, 0.8);
       padding: 10px;
       border-radius: 5px;
       box-shadow: 0 0 5px #888;
       margin-left: 50px;
       margin-top: 5px;
     }
+
 
     .paneButton {
       margin: 5px;
@@ -33,15 +35,9 @@
 
     #motionssparDiv {
       visibility: hidden;
-      position: absolute;
       top: 10px;
       left: 10px;
       z-index: 99;
-      background: white;
       padding: 10px;
-      border-radius: 5px;
-      box-shadow: 0 0 5px #888;
-      margin-left: 50px;
-      margin-top: 100px;
       font-size: 12px;
     }
